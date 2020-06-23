@@ -1,18 +1,14 @@
 package com.lifeknight.autotoxicity.mod;
 
 import com.lifeknight.autotoxicity.gui.LifeKnightGui;
-import com.lifeknight.autotoxicity.gui.ManipulableGui;
+import com.lifeknight.autotoxicity.gui.ListGui;
 import com.lifeknight.autotoxicity.gui.components.LifeKnightButton;
 import com.lifeknight.autotoxicity.utilities.Chat;
-import com.lifeknight.autotoxicity.utilities.Miscellaneous;
-import com.lifeknight.autotoxicity.utilities.Text;
 import com.lifeknight.autotoxicity.variables.LifeKnightVariable;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.BlockPos;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,19 +52,19 @@ public class ModCommand extends CommandBase {
                 new LifeKnightButton("Edit Kill Messages") {
                     @Override
                     public void work() {
-
+                        openGui(new ListGui(killMessages));
+                    }
+                }, new LifeKnightButton("Edit Bed-Break Messages") {
+                    @Override
+                    public void work() {
+                        openGui(new ListGui(bedBreakMessages));
+                    }
+                }, new LifeKnightButton("Edit Win Messages") {
+                    @Override
+                    public void work() {
+                        openGui(new ListGui(winMessages));
                     }
                 }
         ))));
-    }
-
-    public void addMainCommandMessage() {
-        StringBuilder result = new StringBuilder(DARK_GREEN + "/" + modId);
-
-        for (String command : mainCommands) {
-            result.append(" ").append(command).append(",");
-        }
-
-        Chat.addChatMessage(result.substring(0, result.length() - 1));
     }
 }

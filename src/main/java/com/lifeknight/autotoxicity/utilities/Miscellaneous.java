@@ -11,55 +11,7 @@ import static net.minecraft.util.EnumChatFormatting.*;
 
 public class Miscellaneous {
 	public static int getRandomIntBetweenRange(int min, int max) {
-		return ThreadLocalRandom.current().nextInt(min, max);
-	}
-
-	public static double getRandomDoubleBetweenRange(double min, double max) {
-		return ThreadLocalRandom.current().nextDouble(min, max);
-	}
-
-	public static String getCurrentDate() {
-		return new SimpleDateFormat("MM/dd/yyyy").format(new Date());
-	}
-
-	public static String getCurrentTime() {
-		return new SimpleDateFormat("hh:mm:ss a").format(new Date());
-	}
-
-	public static EnumChatFormatting getEnumChatFormatting(String formattedName) {
-		switch (formattedName) {
-			case "Red":
-				return RED;
-			case "Gold":
-				return GOLD;
-			case "Yellow":
-				return YELLOW;
-			case "Green":
-				return GREEN;
-			case "Aqua":
-				return AQUA;
-			case "Blue":
-				return BLUE;
-			case "Light Purple":
-				return LIGHT_PURPLE;
-			case "Dark Red":
-				return DARK_RED;
-			case "Dark Green":
-				return DARK_GREEN;
-			case "Dark Aqua":
-				return DARK_AQUA;
-			case "Dark Blue":
-				return DARK_BLUE;
-			case "Dark Purple":
-				return DARK_PURPLE;
-			case "White":
-				return WHITE;
-			case "Gray":
-				return GRAY;
-			case "Dark Gray":
-				return DARK_GRAY;
-		}
-		return BLACK;
+		return ThreadLocalRandom.current().nextInt(min, max + 1);
 	}
 
 	public static int scale(int toScale) {
@@ -152,5 +104,13 @@ public class Miscellaneous {
 	public static int scaleTo1080pHeight(int heightIn) {
 		int i = heightIn * getScaleFactor();
 		return (int) (i * (getSupposedHeight() / (double) getGameHeight()));
+	}
+
+	public static Object selectRandomItemFromArray(Object[] toArray) {
+		return toArray[getRandomIntBetweenRange(0, toArray.length - 1)];
+	}
+
+	public static String getUsername() {
+		return Minecraft.getMinecraft().thePlayer.getName();
 	}
 }

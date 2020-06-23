@@ -1,8 +1,9 @@
 package com.lifeknight.autotoxicity.mod;
 
-import com.lifeknight.autotoxicity.gui.hud.EnhancedHudText;
 import com.lifeknight.autotoxicity.utilities.Chat;
-import com.lifeknight.autotoxicity.variables.*;
+import com.lifeknight.autotoxicity.utilities.Miscellaneous;
+import com.lifeknight.autotoxicity.variables.LifeKnightBoolean;
+import com.lifeknight.autotoxicity.variables.LifeKnightList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.EnumChatFormatting;
@@ -15,12 +16,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import static com.lifeknight.autotoxicity.gui.hud.EnhancedHudText.textToRender;
-import static net.minecraft.util.EnumChatFormatting.*;
+import static net.minecraft.util.EnumChatFormatting.RED;
 
 @net.minecraftforge.fml.common.Mod(modid = Core.modId, name = Core.modName, version = Core.modVersion, clientSideOnly = true)
 public class Core {
@@ -29,70 +28,13 @@ public class Core {
             modVersion = "1.0",
             modId = "autotoxicity";
     public static final EnumChatFormatting modColor = RED;
-    public static final ExecutorService THREAD_POOL = Executors.newCachedThreadPool(new LifeKnightThreadFactory());
     public static boolean onHypixel = false;
     public static GuiScreen guiToOpen = null;
     public static final LifeKnightBoolean runMod = new LifeKnightBoolean("Mod", "Main", true);
-    public static final LifeKnightBoolean hudTextShadow = new LifeKnightBoolean("HUDTextShadow", "Invisible", true);
-    public static final LifeKnightCycle defaultSeparator = new LifeKnightCycle("DefaultSeparator", "Invisible", new ArrayList<>(Arrays.asList(" > ", ": ", " | ", " - "))) {
-        @Override
-        public void onValueChange() {
-            for (EnhancedHudText enhancedHudText : textToRender) {
-                enhancedHudText.setSeparator(this.getValue());
-            }
-        }
-    };
-    public static final LifeKnightCycle defaultPrefixColor = new LifeKnightCycle("DefaultPrefixColor", "Invisible", new ArrayList<>(Arrays.asList(
-            "Red",
-            "Gold",
-            "Yellow",
-            "Green",
-            "Aqua",
-            "Blue",
-            "Light Purple",
-            "Dark Red",
-            "Dark Green",
-            "Dark Aqua",
-            "Dark Blue",
-            "Dark Purple",
-            "White",
-            "Gray",
-            "Dark Gray",
-            "Black"
-    )), 12) {
-        @Override
-        public void onValueChange() {
-            for (EnhancedHudText enhancedHudText : textToRender) {
-                enhancedHudText.setPrefixColor(this.getValue());
-            }
-        }
-    };
-    public static final LifeKnightCycle defaultContentColor = new LifeKnightCycle("DefaultContentColor", "Invisible", new ArrayList<>(Arrays.asList(
-            "Red",
-            "Gold",
-            "Yellow",
-            "Green",
-            "Aqua",
-            "Blue",
-            "Light Purple",
-            "Dark Red",
-            "Dark Green",
-            "Dark Aqua",
-            "Dark Blue",
-            "Dark Purple",
-            "White",
-            "Gray",
-            "Dark Gray",
-            "Black"
-    )), 12) {
-        @Override
-        public void onValueChange() {
-            for (EnhancedHudText enhancedHudText : textToRender) {
-                enhancedHudText.setContentColor(this.getValue());
-            }
-        }
-    };
-
+    public static final LifeKnightList.LifeKnightStringList killMessages = new LifeKnightList.LifeKnightStringList("KillMessage", "Messages");
+    public static final LifeKnightList.LifeKnightStringList bedBreakMessages = new LifeKnightList.LifeKnightStringList("BedBreakMessage", "Messages");
+    public static final LifeKnightList.LifeKnightStringList winMessages = new LifeKnightList.LifeKnightStringList("WinMessages", "Messages");
+    public static boolean type = false;
     public static Configuration configuration;
 
     @EventHandler
@@ -116,7 +58,47 @@ public class Core {
 
     @SubscribeEvent
     public void onChatMessageReceived(ClientChatReceivedEvent event) {
-
+        if (onHypixel) {
+            String message = EnumChatFormatting.getTextWithoutFormattingCodes(event.message.getFormattedText());
+            if (!message.contains(":")) {
+                if (message.contains("Cross Teaming") || message.contains("/16)!") || message.contains("/12)!")) {
+                    type = false;
+                } else if (message.contains("Teaming is not") || message.contains("(8/8)!") || message.contains("(2/2)!")) {
+                    type = true;
+                }
+                if (runMod.getValue()) {
+                    if (message.contains("Kill") && message.startsWith("+") && message.contains("coins") && !message.contains("Time Played") && !message.contains("Teammate") && !message.contains("Win") && !message.contains("Final Kill") && !message.contains("Bed Destroyed") && !message.contains("Assist")) {
+                        if (killMessages.getValue().isEmpty()) {
+                            if (type) {
+                                Chat.sendChatMessage((String) Miscellaneous.selectRandomItemFromArray(killMessages.getValue().toArray()), Chat.ALL);
+                            } else {
+                                Chat.sendChatMessage((String) Miscellaneous.selectRandomItemFromArray(killMessages.getValue().toArray()), Chat.SHOUT);
+                            }
+                        }
+                    } else if (message.startsWith("+") && message.contains("coins") && !message.contains("Time Played") && !message.contains("Win") && message.contains("Final Kill")) {
+                        if (killMessages.getValue().isEmpty()) {
+                            if (type) {
+                                Chat.sendChatMessage((String) Miscellaneous.selectRandomItemFromArray(killMessages.getValue().toArray()), Chat.ALL);
+                            } else {
+                                Chat.sendChatMessage((String) Miscellaneous.selectRandomItemFromArray(killMessages.getValue().toArray()), Chat.SHOUT);
+                            }
+                        }
+                    } else if (message.startsWith("BED DESTRUCTION") && message.contains(Miscellaneous.getUsername())) {
+                        if (bedBreakMessages.getValue().isEmpty()) {
+                            if (type) {
+                                Chat.sendChatMessage((String) Miscellaneous.selectRandomItemFromArray(bedBreakMessages.getValue().toArray()), Chat.ALL);
+                            } else {
+                                Chat.sendChatMessage((String) Miscellaneous.selectRandomItemFromArray(bedBreakMessages.getValue().toArray()), Chat.SHOUT);
+                            }
+                        }
+                    } else if (message.startsWith("+") && message.contains("coins") && !message.contains("Time Played") && message.contains("Win") && !message.contains("Final Kill")) {
+                        if (!winMessages.getValue().isEmpty()) {
+                            Chat.sendChatMessage((String) Miscellaneous.selectRandomItemFromArray(winMessages.getValue().toArray()), Chat.ALL);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @SubscribeEvent
@@ -124,10 +106,6 @@ public class Core {
         if (guiToOpen != null) {
             Minecraft.getMinecraft().displayGuiScreen(guiToOpen);
             guiToOpen = null;
-        }
-
-        if (Minecraft.getMinecraft().inGameHasFocus) {
-            EnhancedHudText.doRender();
         }
     }
 
