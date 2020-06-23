@@ -1,0 +1,16 @@
+[
+{
+  "modid": "autotoxicity",
+  "name": "AutoToxicity",
+  "description": "Automatically sends messages in chat after you kill a player or break a bed in BedWars (Hypixel-enabled only).",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["LifeKnight"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
