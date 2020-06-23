@@ -68,7 +68,7 @@ public class Core {
                 }
                 if (runMod.getValue()) {
                     if (message.contains("Kill") && message.startsWith("+") && message.contains("coins") && !message.contains("Time Played") && !message.contains("Teammate") && !message.contains("Win") && !message.contains("Final Kill") && !message.contains("Bed Destroyed") && !message.contains("Assist")) {
-                        if (killMessages.getValue().isEmpty()) {
+                        if (!killMessages.getValue().isEmpty()) {
                             if (type) {
                                 Chat.sendChatMessage((String) Miscellaneous.selectRandomItemFromArray(killMessages.getValue().toArray()), Chat.ALL);
                             } else {
@@ -76,7 +76,7 @@ public class Core {
                             }
                         }
                     } else if (message.startsWith("+") && message.contains("coins") && !message.contains("Time Played") && !message.contains("Win") && message.contains("Final Kill")) {
-                        if (killMessages.getValue().isEmpty()) {
+                        if (!killMessages.getValue().isEmpty()) {
                             if (type) {
                                 Chat.sendChatMessage((String) Miscellaneous.selectRandomItemFromArray(killMessages.getValue().toArray()), Chat.ALL);
                             } else {
@@ -84,7 +84,7 @@ public class Core {
                             }
                         }
                     } else if (message.startsWith("BED DESTRUCTION") && message.contains(Miscellaneous.getUsername())) {
-                        if (bedBreakMessages.getValue().isEmpty()) {
+                        if (!bedBreakMessages.getValue().isEmpty()) {
                             if (type) {
                                 Chat.sendChatMessage((String) Miscellaneous.selectRandomItemFromArray(bedBreakMessages.getValue().toArray()), Chat.ALL);
                             } else {
